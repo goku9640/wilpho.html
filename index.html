@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#07110f">
+<meta property="og:title" content="CineWild PhotoLab — See the light. Tell the story.">
+<meta property="og:description" content="Interactive photography, filmmaking and ethical wildlife learning studio.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%23d5fa83%27/%3E%3Ccircle cx=%2732%27 cy=%2732%27 r=%2714%27 fill=%27none%27 stroke=%27%23102017%27 stroke-width=%278%27/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js")</script>
 <meta name="description" content="CineWild PhotoLab — an interactive photography, filmmaking and ethical wildlife learning studio for beginners and professionals.">
 <title>CineWild PhotoLab — See the light. Tell the story.</title>
 <style>
@@ -56,9 +61,25 @@
 @media(max-width:700px){.cwx-section{padding:62px 0}.cwx-panel{padding:14px}.cwx-preview{height:285px}.cwx-catalog-grid{grid-template-columns:repeat(2,1fr)}.cwx-gear-art{height:115px}.cwx-status-grid{grid-template-columns:repeat(2,1fr)}.cwx-editor-stage{height:300px}.cwx-video-control{grid-template-columns:repeat(2,1fr)}.cwx-control-group{padding:11px}.cwx-control-group h4{font-size:.68rem}}
 @media(max-width:390px){.cwx-controls{grid-template-columns:1fr}.cwx-field.full{grid-column:auto}.cwx-catalog-grid{grid-template-columns:1fr 1fr}.cwx-gear-art{height:100px}.cwx-scene-btn{font-size:.65rem;padding:7px 9px}.cwx-preview{height:245px}}
 
+
+/* ===== IMPROVEMENTS ===== */
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:6px}
+.skip{position:fixed;left:12px;top:-60px;z-index:300;background:var(--lime);color:#142018;padding:10px 16px;border-radius:99px;font-weight:800;transition:top .2s}.skip:focus{top:12px}
+.progressbar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--mint),var(--lime));z-index:120;transition:width .1s}
+.navlinks a.active{color:var(--lime)}
+@media(max-width:1180px) and (min-width:1001px){.navlinks{gap:14px;font-size:.76rem}}
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}.js .reveal.in{opacity:1;transform:none}
+.totop{position:fixed;right:18px;bottom:20px;z-index:90;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(10,23,20,.88);color:var(--lime);font-size:1.1rem;opacity:0;pointer-events:none;transition:.25s;backdrop-filter:blur(10px)}.totop.show{opacity:1;pointer-events:auto}
+body.modal-open{overflow:hidden}
+.cwx-preview img#xPreviewSharp{position:absolute;inset:0;z-index:0}
+.cwx-preview img#xPreviewImage{transform:scale(1.06)}
+.cwx-saved-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.cwx-saved-row:last-child{border:0}.cwx-saved-row span:first-child{min-width:0}.cwx-saved-row span:last-child{white-space:nowrap}
+.img-fail{background:linear-gradient(135deg,#1b3a2f,#0b1814)!important}
+.quiz-result{padding:14px 16px;border:1px solid rgba(213,250,131,.2);background:rgba(213,250,131,.07);border-radius:14px;color:#dce9dd}
 </style>
 </head>
 <body>
+<a class="skip" href="#learn">Skip to content</a><div class="progressbar" id="scrollBar" aria-hidden="true"></div>
 <header class="topbar">
  <div class="shell nav">
   <a class="brand" href="#home" aria-label="CineWild PhotoLab home"><span class="brandmark">◉</span><span>CINEWILD <small>PHOTOLAB / FIELD SCHOOL</small></span></a>
@@ -140,6 +161,7 @@
    <div class="cwx-panel-head"><h3>Live viewfinder / लाइव व्यू</h3><span class="cwx-chip"><i class="dot"></i> SIMULATION ACTIVE</span></div>
    <div class="cwx-preview" id="xPreview" aria-label="Interactive camera preview; tap to move focus point">
     <img id="xPreviewImage" src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1400&q=88" alt="Deer in woodland camera simulation scene">
+    <img id="xPreviewSharp" src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1400&q=88" alt="" aria-hidden="true">
     <div class="cwx-noise" id="xNoise"></div><div class="cwx-motion" id="xMotion"></div>
     <div class="cwx-focus" id="xFocus"></div>
     <div class="cwx-preview-hud"><span class="cwx-hud-badge" id="xHudMode">M · MANUAL</span><span class="cwx-hud-badge" id="xHudFocus">AF-C · ANIMAL EYE</span><span class="cwx-hud-badge" id="xHudRec">RAW · 3:2</span></div>
@@ -148,7 +170,7 @@
    <div class="cwx-scene-switch" aria-label="Change practice scene">
     <button class="cwx-scene-btn active" data-scene="wild">🦌 Wildlife</button><button class="cwx-scene-btn" data-scene="bird">🦅 Bird</button><button class="cwx-scene-btn" data-scene="portrait">🙂 Portrait</button><button class="cwx-scene-btn" data-scene="landscape">🏔 Landscape</button><button class="cwx-scene-btn" data-scene="night">🌃 Night</button>
    </div>
-   <div class="cwx-hist-wrap"><div class="cwx-hist"><small>LIVE HISTOGRAM · brightness distribution</small><canvas id="xHistogram" width="500" height="100"></canvas></div><div class="cwx-hist"><small>FOCUS / DEPTH INDICATOR · concept</small><canvas id="xDepth" width="500" height="100"></canvas></div></div>
+   <div class="cwx-hist-wrap"><div class="cwx-hist"><small>LIVE HISTOGRAM · brightness distribution</small><canvas id="xHistogram" width="500" height="100"></canvas></div><div class="cwx-hist"><small>DEPTH OF FIELD · calculated (sharp zone along distance)</small><canvas id="xDepth" width="500" height="100"></canvas></div></div>
    <div class="cwx-status-grid"><div class="cwx-status"><b id="xEv">EV 12.6</b><span>Exposure value</span></div><div class="cwx-status"><b id="xFov">6.9°</b><span>Horizontal view</span></div><div class="cwx-status"><b id="xEq">450 mm</b><span>35 mm equivalent</span></div><div class="cwx-status"><b id="xFocusRead">AF locked</b><span>Focus status</span></div></div>
    <div class="cwx-note" id="xAdvice" aria-live="polite">Wildlife starting point: use a fast shutter, AF-C tracking and a focal length suited to the distance. Keep a respectful distance from animals.</div>
    <div class="cwx-actions"><button class="btn btn-primary" id="xSavePreset">＋ Save this setup</button><button class="btn btn-secondary" id="xReset">↺ Reset camera</button><button class="btn btn-secondary" id="xPresetList">▤ My saved setups <span id="xPresetCount">0</span></button></div>
@@ -213,7 +235,7 @@
    <label class="cwx-upload">＋ Open your photo · अपनी फोटो चुनें<input id="xUpload" type="file" accept="image/*"></label>
    <div class="cwx-editor-stage" style="margin-top:13px"><img id="xEditImage" crossorigin="anonymous" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1500&q=90" alt="Editing preview"><div class="cwx-edit-overlay" id="xEditOverlay"></div></div>
    <div class="cwx-before-after"><div class="cwx-ba"><img id="xBeforeThumb" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=650&q=80" alt="Before preview"><span>BEFORE · Original</span></div><div class="cwx-ba"><img id="xAfterThumb" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=650&q=80" alt="After preview"><span>AFTER · Edited</span></div></div>
-   <div class="cwx-actions"><button class="btn btn-primary" id="xExport">↓ Export edited JPEG</button><button class="btn btn-secondary" id="xResetEdit">↺ Reset edit</button></div>
+   <div class="cwx-actions"><button class="btn btn-primary" id="xExport">↓ Export edited JPEG</button><button class="btn btn-secondary" id="xCompare" title="Press and hold to see the original">◐ Hold to compare</button><button class="btn btn-secondary" id="xResetEdit">↺ Reset edit</button></div>
    <p class="cwx-editor-foot">This is a learning editor for common tonal adjustments; the detail slider is a micro-contrast approximation, not true pixel-level sharpening. It is not a full RAW processor: RAW decoding, layers, masks, healing, lens profiles and true local adjustments need dedicated editing software.</p>
   </div>
   <div class="cwx-editor-controls glass"><div class="cwx-panel-head"><h3>Colour & tone controls</h3><span class="cwx-chip">LIVE ADJUSTMENT</span></div>
@@ -294,6 +316,7 @@
 <footer class="footer"><div class="shell"><div class="footer-row"><a class="brand" href="#home"><span class="brandmark">◉</span><span>CINEWILD <small>PHOTOLAB / FIELD SCHOOL</small></span></a><div class="footer-links"><a href="#learn">Learning map</a><a href="#camera-lab">Camera lab</a><a href="#wildlife">Wildlife ethics</a><a href="#glossary">Glossary</a><a href="#journey">7-day challenge</a></div></div><p class="footer-note">CineWild PhotoLab is an educational learning experience. Camera menus and feature names vary by brand and model. Example settings are starting points; always adapt them to your light, subject, equipment and local wildlife guidance. The camera controls are educational simulations, not a remote-control connection to a physical camera. Gear artworks are vector illustrations rather than manufacturer photographs. The local photo editor exports a basic JPEG. The site is responsive and works as a single HTML file. Internet is required for external example photographs and linked manufacturer references.</p><p class="footer-note">© 2026 CineWild PhotoLab · Learn responsibly. Create thoughtfully.</p></div></footer>
 
 <div class="modal" id="lessonModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-box glass"><button class="modal-close" id="modalClose" aria-label="Close">×</button><span class="eyebrow">FIELD SCHOOL LESSON</span><h2 id="modalTitle" style="font-size:2rem;letter-spacing:-.05em;margin:12px 45px 12px 0">Lesson</h2><div id="modalContent" class="muted"></div><div style="margin-top:22px"><button class="btn btn-primary" id="markLesson">♡ Save this lesson</button></div></div></div>
+<button class="totop" id="toTop" aria-label="Back to top">↑</button>
 <div class="toast" id="toast" role="status" aria-live="polite">Saved</div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -351,7 +374,7 @@ const checks=$$('.field-check');checks.forEach((c,i)=>{c.checked=JSON.parse(loca
 // Glossary search
 $('#glossSearch').addEventListener('input',()=>{const q=$('#glossSearch').value.toLowerCase();let n=0;$$('.term').forEach(t=>{const match=t.innerText.toLowerCase().includes(q);t.classList.toggle('hide',!match);if(match)n++});$('#glossCount').textContent=`${n} terms`});
 // Quiz
-const quiz=[{q:'Which setting most directly controls how long the sensor is exposed to light?',a:['Aperture','Shutter speed','White balance'],c:1,e:'Shutter speed controls the duration of the exposure.'},{q:'What usually happens when you choose a wider aperture, such as f/1.8?',a:['More light enters and depth of field becomes shallower','Less light enters and everything is sharper','The frame rate increases'],c:0,e:'A lower f-number means a wider opening and usually a shallower depth of field.'},{q:'Which autofocus mode is useful for tracking a moving bird?',a:['AF-S / One-Shot','AF-C / Servo','Manual white balance'],c:1,e:'Continuous autofocus updates focus while the subject moves.'},{q:'At 24 fps, which shutter speed is close to the 180° guideline?',a:['1/10 s','1/50 s','1/1000 s'],c:1,e:'1/48 s is the mathematical value; 1/50 s is a common practical setting.'},{q:'What should always come before getting a closer wildlife photograph?',a:['Animal welfare and safe distance','A higher digital zoom','Using flash'],c:0,e:'The subject’s welfare comes first. Never disturb wildlife for a photograph.'}];let qi=0,score=0,answered=false;function renderQuiz(){const q=quiz[qi];$('#quizQuestion').textContent=q.q;$('#quizProgress').textContent=`Question ${qi+1} / ${quiz.length}`;$('#quizBar').style.width=((qi+1)/quiz.length*100)+'%';$('#quizAnswers').innerHTML=q.a.map((a,i)=>`<button class="answer" data-index="${i}">${String.fromCharCode(65+i)} · ${a}</button>`).join('');$('#quizFeedback').textContent='Choose an answer to see why.';$('#quizScore').textContent=`Score: ${score}`;$('#nextQuestion').disabled=true;$('#nextQuestion').textContent=qi===quiz.length-1?'See result →':'Next question →';answered=false;$$('#quizAnswers .answer').forEach(b=>b.addEventListener('click',()=>{if(answered)return;answered=true;const correct=+b.dataset.index===q.c;if(correct)score++;$$('#quizAnswers .answer').forEach((x,i)=>{x.disabled=true;if(i===q.c)x.classList.add('correct')});if(!correct)b.classList.add('wrong');$('#quizFeedback').textContent=(correct?'Correct. ':'Not quite. ')+q.e;$('#quizScore').textContent=`Score: ${score}`;$('#nextQuestion').disabled=false}))}$('#nextQuestion').addEventListener('click',()=>{if(qi<quiz.length-1){qi++;renderQuiz()}else{$('#quizQuestion').textContent=`You scored ${score} / ${quiz.length}.`;$('#quizAnswers').innerHTML='<p class="muted">Keep practising. Review the lessons and try again when you are ready.</p>';$('#quizFeedback').textContent='Your next step: use one idea in a real photo or video.';$('#nextQuestion').textContent='Try again ↻';$('#nextQuestion').disabled=false;$('#nextQuestion').onclick=()=>{qi=0;score=0;$('#nextQuestion').onclick=null;renderQuiz()}}});renderQuiz();
+const quiz=[{q:'Which setting most directly controls how long the sensor is exposed to light?',a:['Aperture','Shutter speed','White balance'],c:1,e:'Shutter speed controls the duration of the exposure.'},{q:'What usually happens when you choose a wider aperture, such as f/1.8?',a:['More light enters and depth of field becomes shallower','Less light enters and everything is sharper','The frame rate increases'],c:0,e:'A lower f-number means a wider opening and usually a shallower depth of field.'},{q:'Which autofocus mode is useful for tracking a moving bird?',a:['AF-S / One-Shot','AF-C / Servo','Manual white balance'],c:1,e:'Continuous autofocus updates focus while the subject moves.'},{q:'At 24 fps, which shutter speed is close to the 180° guideline?',a:['1/10 s','1/50 s','1/1000 s'],c:1,e:'1/48 s is the mathematical value; 1/50 s is a common practical setting.'},{q:'What should always come before getting a closer wildlife photograph?',a:['Animal welfare and safe distance','A higher digital zoom','Using flash'],c:0,e:'The subject’s welfare comes first. Never disturb wildlife for a photograph.'},{q:'You raise ISO from 400 to 1600. How many stops brighter is the exposure?',a:['1 stop','2 stops','4 stops'],c:1,e:'400 to 800 to 1600 is two doublings, so two stops. Expect more noise too.'},{q:'What is a good first step when editing a photograph?',a:['Apply a strong creative filter','Correct exposure and white balance','Push saturation to the maximum'],c:1,e:'Fix the foundations first, then add a subtle creative grade.'},{q:'A bird looks alert and starts moving away as you approach. What now?',a:['Move closer quickly for the shot','Stop, back off and give it space','Make a sound to get its attention'],c:1,e:'A change in behaviour is a stress signal. Give the animal space.'}];let qi=0,score=0,answered=false,quizDone=false;function renderQuiz(){const q=quiz[qi];$('#quizQuestion').textContent=q.q;$('#quizProgress').textContent=`Question ${qi+1} / ${quiz.length}`;$('#quizBar').style.width=((qi+1)/quiz.length*100)+'%';$('#quizAnswers').innerHTML=q.a.map((a,i)=>`<button class="answer" data-index="${i}">${String.fromCharCode(65+i)} · ${a}</button>`).join('');$('#quizFeedback').textContent='Choose an answer to see why.';$('#quizScore').textContent=`Score: ${score}`;$('#nextQuestion').disabled=true;$('#nextQuestion').textContent=qi===quiz.length-1?'See result →':'Next question →';answered=false;$$('#quizAnswers .answer').forEach(b=>b.addEventListener('click',()=>{if(answered)return;answered=true;const correct=+b.dataset.index===q.c;if(correct)score++;$$('#quizAnswers .answer').forEach((x,i)=>{x.disabled=true;if(i===q.c)x.classList.add('correct')});if(!correct)b.classList.add('wrong');$('#quizFeedback').textContent=(correct?'Correct. ':'Not quite. ')+q.e;$('#quizScore').textContent=`Score: ${score}`;$('#nextQuestion').disabled=false}))}$('#nextQuestion').addEventListener('click',()=>{if(quizDone){qi=0;score=0;quizDone=false;renderQuiz();return}if(qi<quiz.length-1){qi++;renderQuiz();return}quizDone=true;const pct=score/quiz.length;$('#quizQuestion').textContent='You scored '+score+' / '+quiz.length+'.';$('#quizProgress').textContent='Finished';$('#quizBar').style.width='100%';$('#quizAnswers').innerHTML='<div class="quiz-result">'+(pct>=.8?'Excellent. You have the core ideas. Now take them into the field.':pct>=.5?'Good progress. Revisit the lessons you missed and try again.':'A solid start. Open the lessons, play with the camera lab, then retry.')+'</div>';$('#quizFeedback').textContent='Your next step: use one idea in a real photo or video.';$('#nextQuestion').textContent='Try again ↻';$('#nextQuestion').disabled=false});renderQuiz();
 // 7-day challenge persistence
 const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getItem('cw-days')||'[]');function paintDays(){dayCards.forEach((d,i)=>{d.classList.toggle('done',dayDone.includes(i));d.querySelector('button').textContent=dayDone.includes(i)?'✓ Completed — undo':'Mark complete +'})}dayCards.forEach((d,i)=>d.querySelector('button').addEventListener('click',()=>{dayDone=dayDone.includes(i)?dayDone.filter(x=>x!==i):[...dayDone,i];localStorage.setItem('cw-days',JSON.stringify(dayDone));paintDays();toast(dayDone.includes(i)?`Day ${i+1} completed!`:`Day ${i+1} reopened`)}));paintDays();
 
@@ -371,6 +394,7 @@ const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getIt
  const shutterDenom=()=>getNum('xShutter');
  const aperture=()=>parseFloat(q('xAperture').value.replace('f/',''));
  const sensorCrop=()=>getNum('xSensor');
+ function setSceneImg(src){q('xPreviewImage').src=src;q('xPreviewSharp').src=src}
  function updateFocus(){
   const mode=q('xFocusMode').value,area=q('xFocusArea').value,dist=getNum('xDistance');
   q('xFocus').style.left=focusPoint.x+'%';q('xFocus').style.top=focusPoint.y+'%';
@@ -385,9 +409,18 @@ const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getIt
   ctx.strokeStyle='rgba(220,240,225,.16)';ctx.lineWidth=1;for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(0,h*i/4);ctx.lineTo(w,h*i/4);ctx.stroke()}
   const peak=Math.max(30,Math.min(w-30,w/2+stops*40));ctx.beginPath();for(let x=0;x<w;x++){let bell=Math.exp(-Math.pow((x-peak)/(75+iso/90),2)/2);let y=h-8-bell*(h*.78);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle='rgba(213,250,131,.6)';ctx.fill();
  }
- function drawDepth(focal,f,distance){
-  const c=q('xDepth'),ctx=c.getContext('2d');if(!ctx)return;const w=c.width,h=c.height;ctx.clearRect(0,0,w,h);let blurLevel=Math.max(0,Math.min(1,(focal/600)*(.9/f)*Math.sqrt(18/Math.max(.2,distance))));
-  for(let i=0;i<30;i++){let bw=w/30;let hh=(.14+Math.sin(i*.6)*.12+Math.random()*.09)*h*(.4+blurLevel);ctx.fillStyle=`rgba(140,227,188,${.28+blurLevel*.55})`;ctx.fillRect(i*bw,h-hh,bw-2,hh)}
+ function drawDepth(focal,f,distance,crop){
+  const c=q('xDepth'),ctx=c.getContext('2d');if(!ctx)return;const w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
+  const s=distance*1000,coc=.03/crop,H=focal*focal/(f*coc)+focal;
+  const near=s*(H-focal)/(H+s-2*focal),far=s<H?s*(H-focal)/(H-s):Infinity;
+  const maxD=Math.max(distance*2,.5),px=m=>Math.max(0,Math.min(w,m/maxD*w));
+  const x0=px(near/1000),x1=isFinite(far)?px(far/1000):w;
+  ctx.strokeStyle='rgba(220,240,225,.25)';ctx.beginPath();ctx.moveTo(0,h-17);ctx.lineTo(w,h-17);ctx.stroke();
+  ctx.fillStyle='rgba(213,250,131,.38)';ctx.fillRect(x0,6,Math.max(3,x1-x0),h-24);
+  ctx.fillStyle='#d5fa83';ctx.fillRect(px(distance)-1.5,2,3,h-20);
+  const fmt=m=>m>=10?Math.round(m)+' m':m.toFixed(m<1?2:1)+' m';
+  ctx.fillStyle='#c4d6c9';ctx.font='19px sans-serif';
+  ctx.fillText('Sharp zone '+fmt(near/1000)+' → '+(isFinite(far)?fmt(far/1000):'∞')+'  (focus '+fmt(distance)+')',4,h-2);
  }
  function updateCamera(){
   const iso=getNum('xIso'),manualSS=shutterDenom(),manualF=aperture(),fl=getNum('xFocal'),crop=sensorCrop(),comp=getNum('xComp'),mode=q('xMode').value;
@@ -405,16 +438,27 @@ const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getIt
    f=nearest(apertureSteps,4);ss=nearest(shutterSteps,125*(iso/100)*Math.pow(5.6/f,2)/Math.pow(2,comp));
    autoNote=`P mode: a simple program pair is selected for this practice scene — approximately f/${f} at 1/${ss} s. Real program shift logic varies by camera maker and scene.`;
   }
-  q('xShutter').disabled=(mode==='A'||mode==='P');q('xAperture').disabled=(mode==='S'||mode==='P');
+  q('xShutter').disabled=(mode==='A'||mode==='P');q('xAperture').disabled=(mode==='S'||mode==='P');if(mode==='A'||mode==='P')q('xShutter').value=String(ss);if(mode==='S'||mode==='P')q('xAperture').value='f/'+f;
   q('xAutoModeNote').textContent=autoNote;
   const stopDiff=Math.log2(iso/100)+Math.log2(125/ss)+2*Math.log2(5.6/f)+(mode==='M'?comp:0);
   const brightness=Math.max(.36,Math.min(1.8,Math.pow(2,stopDiff/2.7)));
-  const blur=Math.max(.05,Math.min(4.2,(2.8/f)*(fl/85)*Math.sqrt(18/Math.max(.2,getNum('xDistance')))*.7));
+  const dist=getNum('xDistance'),sMM=dist*1000,coc=.03/crop,Hyp=fl*fl/(f*coc)+fl;
+  const dFar=sMM<Hyp?sMM*(Hyp-fl)/(Hyp-sMM):Infinity,dNear=sMM*(Hyp-fl)/(Hyp+sMM-2*fl);
+  const dofRatio=isFinite(dFar)?(dFar-dNear)/sMM:99;
+  const bgBlur=Math.max(0,Math.min(6,5.5/(1+dofRatio*5)));
+  const sharpR=Math.max(14,Math.min(160,14+dofRatio*70));
+  const slowRatio=(fl*crop)/ss,stabMode=q('xStab').value;
+  const shake=(slowRatio>1&&stabMode!=='tripod')?Math.min(3,(slowRatio-1)*(stabMode==='on'?.08:.5)):0;
   const noise=Math.max(0,Math.min(.42,(iso-100)/32000));
-  const scene=q('xPreviewImage');scene.style.filter=`brightness(${brightness}) blur(${blur}px) saturate(${q('xColor').value==='Monochrome'?0:q('xColor').value==='Vivid'?1.35:1}) ${q('xWB').value==='tungsten'?'sepia(.22) hue-rotate(-12deg)':q('xWB').value==='shade'?'sepia(.15) saturate(1.12)':''}`;
+  const prof={Vivid:'saturate(1.35) contrast(1.08)',Monochrome:'grayscale(1) contrast(1.1)','Flat / Log concept':'saturate(.65) contrast(.78)',Neutral:'saturate(.88)',Portrait:'saturate(.95) sepia(.05)'}[q('xColor').value]||'';
+  const wbF={tungsten:'sepia(.22) hue-rotate(-12deg)',shade:'sepia(.15) saturate(1.12)',cloudy:'sepia(.08)',fluorescent:'hue-rotate(6deg) saturate(.95)'}[q('xWB').value]||'';
+  const baseF='brightness('+brightness+') '+prof+' '+wbF;
+  const sharpEl=q('xPreviewSharp'),mk='radial-gradient(ellipse '+sharpR+'% '+(sharpR*1.15)+'% at '+focusPoint.x+'% '+focusPoint.y+'%,#000 55%,transparent 100%)';
+  sharpEl.style.filter=baseF+(shake>.05?' blur('+shake.toFixed(2)+'px)':'');
+  q('xPreviewImage').style.filter=baseF+' blur('+(bgBlur+shake).toFixed(2)+'px)';
+  sharpEl.style.webkitMaskImage=mk;sharpEl.style.maskImage=mk;
   q('xNoise').style.opacity=noise;q('xMotion').style.opacity=ss<=60?'.38':ss<=125?'.2':ss>=1000?'0':'.04';
-  const ev= Math.log2(100/iso)+Math.log2(ss/125)+2*Math.log2(f/5.6);
-  q('xEv').textContent='EV '+(ev*-1+12.6).toFixed(1);
+  const ev=Math.log2(f*f*ss)-Math.log2(iso/100);q('xEv').textContent='EV '+ev.toFixed(1);
   const fov=2*Math.atan(36/(2*fl*crop))*180/Math.PI;q('xFov').textContent=fov.toFixed(1)+'°';q('xEq').textContent=Math.round(fl*crop)+' mm';
   q('xHudMode').textContent=mode+' · '+({M:'MANUAL',A:'APERTURE PRI.',S:'SHUTTER PRI.',P:'PROGRAM'}[mode]);
   q('xHudRec').textContent=q('xFile').value.split(' ')[0]+' · '+q('xRatio').value;
@@ -422,11 +466,11 @@ const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getIt
   const status=stopDiff>2?'Likely overexposed':stopDiff<-2?'Likely underexposed':Math.abs(stopDiff)<.5?'Near reference exposure':stopDiff>0?'Brighter than reference':'Darker than reference';
   q('xAdvice').textContent= currentScene==='wild'&&ss<500?'For wildlife, this shutter may be too slow for subject movement. Raise shutter speed and compensate with aperture or ISO.':currentScene==='night'&&ss>500?'At night, a very fast shutter may make the image too dark. Consider a wider aperture, a stable support or higher ISO.':status+'. '+sceneData[currentScene].tip;
   q('xExposureNote').textContent=`Exposure estimate: ${stopDiff>=0?'+':''}${stopDiff.toFixed(1)} stops relative to ISO 100 · 1/125 s · f/5.6. Current look: ${status}. A real meter reading depends on the light and metering mode.`;
-  drawHistogram(stopDiff,iso);drawDepth(fl,f,getNum('xDistance'));updateFocus();
+  drawHistogram(stopDiff,iso);drawDepth(fl,f,getNum('xDistance'),crop);updateFocus();
  }
  ['xIso','xShutter','xAperture','xComp','xMeter','xLens','xFocal','xSensor','xStab','xFocusMode','xFocusArea','xDistance','xDrive','xWB','xFile','xRatio','xColor','xMode'].forEach(id=>q(id).addEventListener('input',updateCamera));
- q('xPreview').addEventListener('click',e=>{const r=e.currentTarget.getBoundingClientRect();focusPoint={x:Math.max(4,Math.min(96,(e.clientX-r.left)/r.width*100)),y:Math.max(6,Math.min(94,(e.clientY-r.top)/r.height*100))};updateFocus();toast('Focus point moved')});
- document.querySelectorAll('.cwx-scene-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.cwx-scene-btn').forEach(x=>x.classList.toggle('active',x===b));currentScene=b.dataset.scene;q('xPreviewImage').src=sceneData[currentScene].src;q('xAdvice').textContent=sceneData[currentScene].tip;updateCamera()}));
+ q('xPreview').setAttribute('tabindex','0');q('xPreview').setAttribute('title','Click or use arrow keys to move the focus point');q('xPreview').addEventListener('keydown',e=>{const k={ArrowLeft:[-4,0],ArrowRight:[4,0],ArrowUp:[0,-4],ArrowDown:[0,4]}[e.key];if(!k)return;e.preventDefault();focusPoint={x:Math.max(4,Math.min(96,focusPoint.x+k[0])),y:Math.max(6,Math.min(94,focusPoint.y+k[1]))};updateCamera()});q('xPreview').addEventListener('click',e=>{const r=e.currentTarget.getBoundingClientRect();focusPoint={x:Math.max(4,Math.min(96,(e.clientX-r.left)/r.width*100)),y:Math.max(6,Math.min(94,(e.clientY-r.top)/r.height*100))};updateCamera();toast('Focus point moved')});
+ document.querySelectorAll('.cwx-scene-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.cwx-scene-btn').forEach(x=>x.classList.toggle('active',x===b));currentScene=b.dataset.scene;setSceneImg(sceneData[currentScene].src);q('xAdvice').textContent=sceneData[currentScene].tip;updateCamera()}));
  const lensRanges={kit:[18,55],wide:[16,35],standard:[24,70],portrait:[85,85],macro:[100,100],tele:[70,200],supertele:[100,600]};
  q('xLens').addEventListener('change',()=>{const r=lensRanges[q('xLens').value];q('xFocal').min=r[0];q('xFocal').max=r[1];q('xFocal').value=Math.round((r[0]+r[1])/2);updateCamera()});
  function applyMission(name){const set={bird:{scene:'bird',iso:1600,ss:2000,f:'f/5.6',fl:400,mode:'AF-C',dist:25},portrait:{scene:'portrait',iso:200,ss:500,f:'f/1.8',fl:85,mode:'AF-S',dist:2.5},landscape:{scene:'landscape',iso:100,ss:125,f:'f/8',fl:24,mode:'AF-S',dist:25},night:{scene:'night',iso:3200,ss:30,f:'f/2.8',fl:24,mode:'AF-S',dist:20}}[name];
@@ -434,10 +478,18 @@ const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getIt
  }
  document.querySelectorAll('[data-mission]').forEach(b=>b.addEventListener('click',()=>applyMission(b.dataset.mission)));
  function collectSetup(){return {name:'Setup '+new Date().toLocaleString(),scene:currentScene,mode:q('xMode').value,iso:q('xIso').value,shutter:q('xShutter').value,aperture:q('xAperture').value,focal:q('xFocal').value,lens:q('xLens').value,focus:q('xFocusMode').value,area:q('xFocusArea').value,distance:q('xDistance').value,sensor:q('xSensor').value,wb:q('xWB').value,file:q('xFile').value,comp:q('xComp').value,drive:q('xDrive').value,meter:q('xMeter').value,ratio:q('xRatio').value,color:q('xColor').value,stab:q('xStab').value}}
- function showSaved(){q('xPresetCount').textContent=savedSetups.length;q('xSavedOut').textContent=savedSetups.length?savedSetups.map((v,i)=>`${i+1}. ${v.name} — ISO ${v.iso} · 1/${v.shutter} · ${v.aperture} · ${v.focal} mm`).join(' | '):'No saved setups yet. Save a camera setup to remember it on this device.'}
- q('xSavePreset').addEventListener('click',()=>{const a=collectSetup();a.name='Setup '+(savedSetups.length+1);savedSetups.unshift(a);savedSetups=savedSetups.slice(0,12);localStorage.setItem('cwx-setups',JSON.stringify(savedSetups));showSaved();toast('Camera setup saved on this device')});
- q('xPresetList').addEventListener('click',()=>{showSaved();if(savedSetups.length){const a=savedSetups[0];applyMission(a.scene==='bird'?'bird':a.scene==='portrait'?'portrait':a.scene==='landscape'?'landscape':a.scene==='night'?'night':'wild');q('xMode').value=a.mode;q('xIso').value=a.iso;q('xShutter').value=a.shutter;q('xAperture').value=a.aperture;q('xLens').value=a.lens||'supertele';const lr=lensRanges[q('xLens').value]||[14,600];q('xFocal').min=lr[0];q('xFocal').max=lr[1];q('xFocal').value=a.focal;q('xFocusMode').value=a.focus;q('xFocusArea').value=a.area;q('xDistance').value=a.distance||18;q('xSensor').value=a.sensor;q('xWB').value=a.wb;q('xFile').value=a.file;q('xComp').value=a.comp||0;q('xDrive').value=a.drive||'Single frame';q('xMeter').value=a.meter||'Evaluative / Matrix';q('xRatio').value=a.ratio||'3:2';q('xColor').value=a.color||'Standard';q('xStab').value=a.stab||'on';updateCamera();toast('Latest saved setup loaded')} });
- q('xReset').addEventListener('click',()=>{q('xIso').value=800;q('xShutter').value=1000;q('xAperture').value='f/5.6';q('xComp').value=0;q('xFocal').value=300;q('xSensor').value=1.5;q('xFocusMode').value='AF-C';q('xFocusArea').value='Animal eye detect';q('xDistance').value=18;q('xMode').value='M';q('xWB').value='auto';q('xFile').value='RAW';q('xRatio').value='3:2';q('xColor').value='Standard';q('xLens').value='supertele';q('xFocal').min=100;q('xFocal').max=600;currentScene='wild';document.querySelectorAll('.cwx-scene-btn').forEach(b=>b.classList.toggle('active',b.dataset.scene==='wild'));q('xPreviewImage').src=sceneData.wild.src;focusPoint={x:50,y:48};updateCamera();toast('Camera settings reset')});
+ function persistSetups(){try{localStorage.setItem('cwx-setups',JSON.stringify(savedSetups))}catch(e){}}
+ function showSaved(){q('xPresetCount').textContent=savedSetups.length;const box=q('xSavedOut');if(!savedSetups.length){box.textContent='No saved setups yet. Save a camera setup to remember it on this device.';return}
+  box.innerHTML=savedSetups.map((v,i)=>'<div class="cwx-saved-row"><span><strong>'+safe(v.name)+'</strong> · ISO '+safe(v.iso)+' · 1/'+safe(v.shutter)+' · '+safe(v.aperture)+' · '+safe(v.focal)+' mm · '+safe(v.focus)+'</span><span><button class="cwx-small-btn" data-load="'+i+'">Load</button> <button class="cwx-small-btn" data-del="'+i+'" aria-label="Delete setup '+(i+1)+'">✕</button></span></div>').join('')}
+ function loadSetup(a){const btn=document.querySelector('.cwx-scene-btn[data-scene="'+a.scene+'"]');if(btn)btn.click();
+  q('xLens').value=a.lens||'supertele';const lr=lensRanges[q('xLens').value]||[14,600];q('xFocal').min=lr[0];q('xFocal').max=lr[1];
+  const set=(id,val)=>{if(val!==undefined&&val!==null)q(id).value=val};
+  set('xMode',a.mode);set('xIso',a.iso);set('xShutter',a.shutter);set('xAperture',a.aperture);set('xFocal',a.focal);set('xFocusMode',a.focus);set('xFocusArea',a.area);set('xDistance',a.distance);set('xSensor',a.sensor);set('xWB',a.wb);set('xFile',a.file);set('xComp',a.comp);set('xDrive',a.drive);set('xMeter',a.meter);set('xRatio',a.ratio);set('xColor',a.color);set('xStab',a.stab);
+  updateCamera();toast('Setup loaded')}
+ q('xSavedOut').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.load!==undefined){const a=savedSetups[+b.dataset.load];if(a)loadSetup(a)}else if(b.dataset.del!==undefined){savedSetups.splice(+b.dataset.del,1);persistSetups();showSaved();toast('Setup deleted')}});
+ q('xSavePreset').addEventListener('click',()=>{const a=collectSetup();const names={wild:'Wildlife',bird:'Bird',portrait:'Portrait',landscape:'Landscape',night:'Night'};a.name=(names[a.scene]||'Setup')+' · '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});savedSetups.unshift(a);savedSetups=savedSetups.slice(0,12);persistSetups();showSaved();toast('Camera setup saved on this device')});
+ q('xPresetList').addEventListener('click',()=>{showSaved();q('xSavedOut').scrollIntoView({behavior:'smooth',block:'nearest'})});
+ q('xReset').addEventListener('click',()=>{q('xIso').value=800;q('xShutter').value=1000;q('xAperture').value='f/5.6';q('xComp').value=0;q('xFocal').value=300;q('xSensor').value=1.5;q('xFocusMode').value='AF-C';q('xFocusArea').value='Animal eye detect';q('xDistance').value=18;q('xMode').value='M';q('xWB').value='auto';q('xFile').value='RAW';q('xRatio').value='3:2';q('xColor').value='Standard';q('xLens').value='supertele';q('xFocal').min=100;q('xFocal').max=600;currentScene='wild';document.querySelectorAll('.cwx-scene-btn').forEach(b=>b.classList.toggle('active',b.dataset.scene==='wild'));setSceneImg(sceneData.wild.src);focusPoint={x:50,y:48};updateCamera();toast('Camera settings reset')});
  showSaved();updateCamera();
 
  // Product-style vector artwork: unique silhouette variants, not manufacturer photos.
@@ -519,11 +571,72 @@ const dayCards=$$('#journeyGrid .day');let dayDone=JSON.parse(localStorage.getIt
  q('xResetEdit').addEventListener('click',()=>{resetEditControls();toast('Edit settings reset')});
  const looks={natural:{e:0,c:100,h:0,s:0,sa:100,w:0,v:0,sh:0},cinema:{e:-.15,c:118,h:-25,s:18,sa:92,w:9,v:28,sh:1.4},forest:{e:.05,c:112,h:-10,s:25,sa:115,w:-9,v:18,sh:1},mono:{e:0,c:120,h:-20,s:8,sa:0,w:0,v:24,sh:1.2},warm:{e:.12,c:108,h:-14,s:10,sa:112,w:28,v:17,sh:.8}};
  document.querySelectorAll('[data-look]').forEach(b=>b.addEventListener('click',()=>{const v=looks[b.dataset.look];q('xEditExposure').value=v.e;q('xEditContrast').value=v.c;q('xEditHighlights').value=v.h;q('xEditShadows').value=v.s;q('xEditSaturation').value=v.sa;q('xEditWarmth').value=v.w;q('xEditVignette').value=v.v;q('xEditSharp').value=v.sh;applyEdit();document.querySelectorAll('[data-look]').forEach(x=>x.classList.toggle('active',x===b))}));
- q('xExport').addEventListener('click',()=>{try{const img=editImage;if(!img||!img.naturalWidth){toast('Load a photo first');return}const max=2400,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*scale);c.height=Math.round(img.naturalHeight*scale);const ctx=c.getContext('2d');const v=editValues();ctx.filter=`brightness(${Math.pow(2,v.ex)}) contrast(${(v.con/100)*(1+v.sharp*.025)}) saturate(${v.sat/100}) sepia(${Math.max(0,v.warm)/240}) hue-rotate(${v.warm<0?Math.abs(v.warm)*.13:0}deg)`;ctx.drawImage(img,0,0,c.width,c.height);ctx.filter='none';if(v.hi!==0||v.sh!==0){const pix=ctx.getImageData(0,0,c.width,c.height);const d=pix.data;for(let i=0;i<d.length;i+=4){const lum=(d[i]*.2126+d[i+1]*.7152+d[i+2]*.0722)/255;const hi=Math.pow(lum,2.2)*(v.hi*.38);const sh=Math.pow(1-lum,2.0)*(v.sh*.38);const delta=hi+sh;d[i]=Math.max(0,Math.min(255,d[i]+delta));d[i+1]=Math.max(0,Math.min(255,d[i+1]+delta));d[i+2]=Math.max(0,Math.min(255,d[i+2]+delta));}ctx.putImageData(pix,0,0)}if(v.vig>0){const r=Math.max(c.width,c.height)*.78;const g=ctx.createRadialGradient(c.width/2,c.height/2,r*.25,c.width/2,c.height/2,r);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,`rgba(0,0,0,${v.vig/145})`);ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height)}c.toBlob(blob=>{if(!blob){toast('Export could not be created. Try another photo.');return}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='CineWild-edited-photo.jpg';a.click();setTimeout(()=>URL.revokeObjectURL(url),2500);toast('Edited JPEG exported')},'image/jpeg',.94)}catch(err){toast('Export blocked for this image. Try uploading it from your device.')}});
+ q('xExport').addEventListener('click',()=>{try{
+  const img=editImage;if(!img||!img.naturalWidth){toast('Load a photo first');return}
+  const max=2400,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+  const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*scale);c.height=Math.round(img.naturalHeight*scale);
+  const ctx=c.getContext('2d',{willReadFrequently:true});const v=editValues();
+  const bright=Math.pow(2,v.ex),con=(v.con/100)*(1+v.sharp*.025),sat=v.sat/100;
+  const native=('filter' in ctx);
+  if(native)ctx.filter='brightness('+bright+') contrast('+con+') saturate('+sat+') sepia('+(Math.max(0,v.warm)/240)+') hue-rotate('+(v.warm<0?Math.abs(v.warm)*.13:0)+'deg)';
+  ctx.drawImage(img,0,0,c.width,c.height);if(native)ctx.filter='none';
+  if(!native||v.hi!==0||v.sh!==0){
+   const pix=ctx.getImageData(0,0,c.width,c.height),d=pix.data,cl=x=>x<0?0:x>255?255:x;
+   for(let i=0;i<d.length;i+=4){let r=d[i],g=d[i+1],b=d[i+2];
+    if(!native){r*=bright;g*=bright;b*=bright;r=(r-128)*con+128;g=(g-128)*con+128;b=(b-128)*con+128;const l=.2126*r+.7152*g+.0722*b;r=l+(r-l)*sat;g=l+(g-l)*sat;b=l+(b-l)*sat;
+     if(v.warm>0){r+=v.warm*.5;g+=v.warm*.15;b-=v.warm*.5}else if(v.warm<0){b+=-v.warm*.5;r+=v.warm*.3}}
+    if(v.hi!==0||v.sh!==0){const lum=cl(.2126*r+.7152*g+.0722*b)/255;const delta=Math.pow(lum,2.2)*(v.hi*.38)+Math.pow(1-lum,2)*(v.sh*.38);r+=delta;g+=delta;b+=delta}
+    d[i]=cl(r);d[i+1]=cl(g);d[i+2]=cl(b)}
+   ctx.putImageData(pix,0,0)}
+  if(v.vig>0){const r=Math.max(c.width,c.height)*.78;const g=ctx.createRadialGradient(c.width/2,c.height/2,r*.25,c.width/2,c.height/2,r);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+(v.vig/145)+')');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height)}
+  c.toBlob(blob=>{if(!blob){toast('Export could not be created. Try another photo.');return}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='CineWild-edited-photo.jpg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);toast('Edited JPEG exported')},'image/jpeg',.94)
+ }catch(err){toast('Export blocked for this image. Try opening it from your device.')}});
  // Extend the existing language switch to newly added explanatory labels.
  const languageLabels=[...document.querySelectorAll('[data-en][data-hi]')];document.getElementById('langBtn').addEventListener('click',()=>{setTimeout(()=>{const hi=document.documentElement.lang==='hi';languageLabels.forEach(el=>{const value=hi?el.dataset.hi:el.dataset.en;el.innerHTML=value.replace(/\n/g,'<br>')})},0)});
 })();
 
+</script>
+
+<script>
+/* ===== Page enhancements ===== */
+(()=>{
+ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+ // scroll progress + back to top
+ const bar=$('#scrollBar'),top=$('#toTop');
+ const onScroll=()=>{const h=document.documentElement,max=h.scrollHeight-h.clientHeight;bar.style.width=(max>0?h.scrollTop/max*100:0)+'%';top.classList.toggle('show',h.scrollTop>900)};
+ addEventListener('scroll',onScroll,{passive:true});onScroll();
+ top.addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}));
+ // reveal on scroll
+ if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);setTimeout(()=>e.target.classList.remove('reveal','in'),800)}}),{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+  $$('.path-card,.course-card,.demo-card,.compare-card,.tool-card,.day,.term,.cwx-stat-tile').forEach(el=>{el.classList.add('reveal');io.observe(el)});
+ }
+ // active nav link
+ if('IntersectionObserver' in window){
+  const links=$$('#navlinks a'),map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+  const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=map.get(e.target.id);if(a)a.classList.add('active')}}),{rootMargin:'-45% 0px -50% 0px'});
+  map.forEach((a,id)=>{const el=document.getElementById(id);if(el)so.observe(el)});
+ }
+ // image fallback when an external photo cannot load
+ const ph='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#1d3d31"/><stop offset="1" stop-color="#0a1612"/></linearGradient></defs><rect width="800" height="500" fill="url(#g)"/><g fill="none" stroke="#8ce3bc" stroke-opacity=".5" stroke-width="6"><rect x="300" y="190" width="200" height="130" rx="22"/><circle cx="400" cy="255" r="40"/></g><text x="400" y="380" fill="#a4b7ab" font-family="sans-serif" font-size="22" text-anchor="middle">Photo unavailable offline</text></svg>');
+ document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&!t.dataset.fb){t.dataset.fb='1';t.src=ph;t.parentElement&&t.parentElement.classList.add('img-fail')}},true);
+ // modal: Escape, focus management, scroll lock
+ const modal=$('#lessonModal');let opener=null;
+ document.addEventListener('click',e=>{const b=e.target.closest('.open-lesson');if(b)opener=b});
+ new MutationObserver(()=>{const open=modal.classList.contains('open');document.body.classList.toggle('modal-open',open);if(open)$('#modalClose').focus();else if(opener){opener.focus();opener=null}}).observe(modal,{attributes:true,attributeFilter:['class']});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))modal.classList.remove('open')});
+ // compare original while holding
+ const cmp=$('#xCompare'),img=$('#xEditImage'),ov=$('#xEditOverlay');let held=null;
+ const hold=()=>{if(held===null){held=img.style.filter;img.style.filter='none';ov.style.opacity='0'}};
+ const rel=()=>{if(held!==null){img.style.filter=held;ov.style.opacity='';held=null}};
+ ['pointerdown'].forEach(n=>cmp.addEventListener(n,hold));['pointerup','pointerleave','pointercancel','blur'].forEach(n=>cmp.addEventListener(n,rel));
+ cmp.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();hold()}});cmp.addEventListener('keyup',rel);
+ // language: remember choice, translate new nav links
+ const nav={'#real-camera':['Simulator','सिम्युलेटर'],'#gear-atlas':['Gear Atlas','गियर एटलस'],'#edit-studio':['Edit Studio','एडिट स्टूडियो']};
+ const langBtn=$('#langBtn');
+ langBtn.addEventListener('click',()=>setTimeout(()=>{const hi=document.documentElement.lang==='hi';Object.entries(nav).forEach(([h,t])=>{const a=document.querySelector('#navlinks a[href="'+h+'"]');if(a)a.textContent=hi?t[1]:t[0]});try{localStorage.setItem('cw-lang',hi?'hi':'en')}catch(e){}},0));
+ try{if(localStorage.getItem('cw-lang')==='hi')langBtn.click()}catch(e){}
+})();
 </script>
 </body>
 </html>
